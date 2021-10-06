@@ -5,8 +5,10 @@ import { db } from "./firebase";
 
 const App = () => {
   const [todos, setTodos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     db.collection("todos").onSnapshot((snapshot) => {
       setTodos(snapshot.docs.map((doc) => doc.data()));
     });
@@ -17,6 +19,8 @@ const App = () => {
       <h3 className="text-center">Todo App</h3>
       <AddTodo setTodos={setTodos} todos={todos} />
       <>
+        {loading && "Loading..."}
+        {!todos.length < 0 && setLoading(false)}
         {todos.map((todo) => (
           <Todos key={todo.id} todo={todo} />
         ))}
